@@ -70,8 +70,18 @@ public class Main {
                 case 1:
                     while(true){
                         // 반복문 (메뉴 선택이 유효하다면)
-                        // 1. 버거 선택 - 직접 참조 [ 같은 메모리를 가리킴 ]
-                        selectMenus = burgers;
+                        // 1. 버거 선택 - [ 직접 참조 ] [ 같은 메모리를 가리킴 ] - 선택 데이터 수정 우려 발생
+                        // selectMenus = burgers;
+                        // 새로운 메모리에 복사 [ 깊은 참조 ] - 이렇게 해야 햄버거와 음료와 디저트 각 정보가 섞이지 않음
+                        selectMenus = new String[burgers.length][3];
+
+                        // 각 행과 열을 하나씩 복사 burgers -> selectNenus
+                        for (int i = 0; i < burgers.length; i++) {
+                            for (int j = 0; j < burgers[i].length; j++) {
+                                selectMenus[i][j] =  burgers[i][j];
+                            }
+                        }
+
                         // 버거 상세 메뉴 출력
                         printDetailMenu(categories[categoryChoice - 1], selectMenus);
                         // 숫자 선택 (1,2,3,4....)
@@ -97,10 +107,6 @@ public class Main {
 
                         // 주문 완료 안내
                         // 선택한 메뉴 메뉴 이름과 가격 정보 출력
-//                        System.out.println("=======[ 주문이 완료되었습니다! ]========");
-//                        System.out.println("선택한 메뉴: " + choiceMenu[0]
-//                                + " | " + choiceMenu[1]);
-//                        System.out.println("=====================================");
                         ChoiceMenu(choiceMenu);
 
                         break;
@@ -187,8 +193,6 @@ public class Main {
      */
     public static void ChoiceMenu(String[] choiceMenu) {
         System.out.println("=======[ 주문이 완료되었습니다! ]========");
-//        System.out.println("선택한 메뉴: " + choiceMenu[0]
-//                + " | " + choiceMenu[1]);
 
             // 출력 서식 맞추기 (이스케이프 문자 활용)
             // %-16s : 메뉴 이름 왼쪽 정렬, 16칸 확보
