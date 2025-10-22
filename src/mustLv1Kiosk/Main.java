@@ -1,5 +1,7 @@
 package mustLv1Kiosk;
 
+import java.util.Scanner;
+
 /**
  * lv.1 기본적인 키오스크를 프로그래밍 해보자.
  * - 입력 처리와 간단한 흐름 제어
@@ -8,6 +10,28 @@ package mustLv1Kiosk;
 public class Main {
     public static void main(String[] args) {
         // 스캐너 선언
+        Scanner sc = new Scanner(System.in);
+
+        // 각 카테고리별 메뉴 (이름, 가격, 설명)
+        // 이름, 가격, 설명 형식이 동일한 메뉴가 여러개 이므로 2차원 배열로 선언
+        String[][] burgerMenus = {
+                {"ShackBurger", "W 6.9", "토마토, 양상추, 쉑소스가 토핑된 치즈버거"},
+                {"SmokeShack", "W 8.9", "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거"},
+                {"Cheeseburger", "W 6.9", "포테이토 번과 비프패티, 치즈가 토핑된 치즈버거"},
+                {"Hamburger", "W 5.4", "비프패티를 기반으로 야채가 들어간 기본버거"}
+        };
+
+        String[][] drinkMenus = {
+                {"Cola", "W 2.0", "시원한 콜라"},
+                {"Sprite", "W 2.0", "상쾌한 사이다"},
+                {"Coffee", "W 3.0", "진한 아메리카노"}
+        };
+
+        String[][] dessertMenus = {
+                {"IceCream", "W 4.0", "부드러운 바닐라 아이스크림"},
+                {"Cake", "W 5.0", "달콤한 초콜릿 케이크"},
+                {"Cookie", "W 3.5", "걷은 바삭하고 안은 촉촉한 쿠키"},
+        };
 
         // 주문 반복문(무한)
 
