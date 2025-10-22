@@ -107,24 +107,99 @@ public class Main {
 
                         // 주문 완료 안내
                         // 선택한 메뉴 메뉴 이름과 가격 정보 출력
-                        ChoiceMenu(choiceMenu);
+                        printChoiceMenu(choiceMenu);
 
                         break;
                     }
+                    break;
                 case 2:
                     while(true){
                         // 2. 음료 선택
-                        selectMenus = drinks;
+                        // 새로운 메모리에 복사 [ 깊은 참조 ] - 이렇게 해야 햄버거와 음료와 디저트 각 정보가 섞이지 않음
+                        selectMenus = new String[drinks.length][3];
 
+                        // 각 행과 열을 하나씩 복사 drinks -> selectNenus
+                        for (int i = 0; i < drinks.length; i++) {
+                            for (int j = 0; j < drinks[i].length; j++) {
+                                selectMenus[i][j] =  drinks[i][j];
+                            }
+                        }
+
+                        // 버거 상세 메뉴 출력
+                        printDetailMenu(categories[categoryChoice - 1], selectMenus);
+                        // 숫자 선택 (1,2,3,4....)
+                        int drinkChoice = sc.nextInt();
+
+                        // 0 누를시 카테고리 메뉴로 복귀
+                        if (drinkChoice == 0) {
+                            continue;
+                        }
+
+                        // 잘못된 입력 처리
+                        if (drinkChoice < 0 || drinkChoice > selectMenus.length) {
+                            System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
+                            continue;
+                        }
+
+                        // 선택한 숫자를 2차원 배열의 행 인덱스로 삽입
+                        index = drinkChoice - 1;
+                        // 선택한 숫자 입력과 2차원 배열에 저장된 메뉴 행 인덱스가 같은 메뉴정보를 1차원 배열에 저장
+                        for (int i = 0; i < selectMenus[index].length; i++) {
+                            choiceMenu[i] = selectMenus[index][i];
+                        }
+
+                        // 주문 완료 안내
+                        // 선택한 메뉴 메뉴 이름과 가격 정보 출력
+                        printChoiceMenu(choiceMenu);
+
+                        // while 무한 반복문 break;
                         break;
                     }
+                    // switch 전용 break;
+                    break;
                 case 3:
                     while(true){
                         // 3. 디저트 선택
-                        selectMenus = desserts;
+                        // 새로운 메모리에 복사 [ 깊은 참조 ] - 이렇게 해야 햄버거와 음료와 디저트 각 정보가 섞이지 않음
+                        selectMenus = new String[desserts.length][3];
+
+                        // 각 행과 열을 하나씩 복사 desserts -> selectNenus
+                        for (int i = 0; i < desserts.length; i++) {
+                            for (int j = 0; j < desserts[i].length; j++) {
+                                selectMenus[i][j] =  desserts[i][j];
+                            }
+                        }
+
+                        // 버거 상세 메뉴 출력
+                        printDetailMenu(categories[categoryChoice - 1], selectMenus);
+                        // 숫자 선택 (1,2,3,4....)
+                        int dessertChoice = sc.nextInt();
+
+                        // 0 누를시 카테고리 메뉴로 복귀
+                        if (dessertChoice == 0) {
+                            continue;
+                        }
+
+                        // 잘못된 입력 처리
+                        if (dessertChoice < 0 || dessertChoice > selectMenus.length) {
+                            System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
+                            continue;
+                        }
+
+                        // 선택한 숫자를 2차원 배열의 행 인덱스로 삽입
+                        index = dessertChoice - 1;
+                        // 선택한 숫자 입력과 2차원 배열에 저장된 메뉴 행 인덱스가 같은 메뉴정보를 1차원 배열에 저장
+                        for (int i = 0; i < selectMenus[index].length; i++) {
+                            choiceMenu[i] = selectMenus[index][i];
+                        }
+
+                        // 주문 완료 안내
+                        // 선택한 메뉴 메뉴 이름과 가격 정보 출력
+                        printChoiceMenu(choiceMenu);
 
                         break;
                     }
+                    break;
                 case 0:
                     // 프로그램 종료
                     break;
@@ -191,7 +266,7 @@ public class Main {
      * 선택 메뉴 출력 메소드
      * @param choiceMenu 선택 메뉴 1차원 배열
      */
-    public static void ChoiceMenu(String[] choiceMenu) {
+    public static void printChoiceMenu(String[] choiceMenu) {
         System.out.println("=======[ 주문이 완료되었습니다! ]========");
 
             // 출력 서식 맞추기 (이스케이프 문자 활용)
