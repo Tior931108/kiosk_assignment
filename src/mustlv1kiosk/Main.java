@@ -97,10 +97,11 @@ public class Main {
 
                         // 주문 완료 안내
                         // 선택한 메뉴 메뉴 이름과 가격 정보 출력
-                        System.out.println("=======[ 주문이 완료되었습니다! ]========");
-                        System.out.println("선택한 메뉴: " + choiceMenu[0]
-                                + " | " + choiceMenu[1]);
-                        System.out.println("=====================================");
+//                        System.out.println("=======[ 주문이 완료되었습니다! ]========");
+//                        System.out.println("선택한 메뉴: " + choiceMenu[0]
+//                                + " | " + choiceMenu[1]);
+//                        System.out.println("=====================================");
+                        ChoiceMenu(choiceMenu);
 
                         break;
                     }
@@ -158,18 +159,44 @@ public class Main {
     /**
      * 상세 메뉴 출력 메소드
      * @param categoryName 공통 메뉴 이름
-     * @param detailMenus 상세 메뉴이름, 가격, 설명
+     * @param detailMenus 상세 메뉴이름, 가격, 설명 - 2차원배열
      */
     public static void printDetailMenu(String categoryName, String[][] detailMenus) {
         System.out.println("==========[ " + categoryName.toUpperCase() + " MENU ]==========");
         System.out.println(categoryName.toUpperCase() + " 메뉴 입니다. 원하는 음식을 골라주세요.");
         for (int i = 0; i < detailMenus.length; i++) {
-                System.out.println((i + 1) + ". " + detailMenus[i][0] // 상세 메뉴 이름
-                        + " | " + detailMenus[i][1] // 상세 가격
-                        + " | " + detailMenus[i][2]); // 상세 설명
+            // 출력 서식 맞추기 (이스케이프 문자 활용)
+            // %d : 숫자
+            // %-16s : 메뉴 이름 왼쪽 정렬, 16칸 확보
+            // % 5s : 가격 오른쪽 정렬, 7칸 확보
+            // %s : 설명 (길이 제한 없음)
+            System.out.printf("%d. %-16s | %5s | %s\n",
+                    (i + 1),            // 입력할 숫자 출력
+                    detailMenus[i][0],  // 상세 메뉴 이름
+                    detailMenus[i][1],  // 상제 가격
+                    detailMenus[i][2]); // 상세 설명
         }
         System.out.println("0. 뒤로가기");
         System.out.println("=====================================");
         System.out.print("입력 : ");
+    }
+
+    /**
+     * 선택 메뉴 출력 메소드
+     * @param choiceMenu 선택 메뉴 1차원 배열
+     */
+    public static void ChoiceMenu(String[] choiceMenu) {
+        System.out.println("=======[ 주문이 완료되었습니다! ]========");
+//        System.out.println("선택한 메뉴: " + choiceMenu[0]
+//                + " | " + choiceMenu[1]);
+
+            // 출력 서식 맞추기 (이스케이프 문자 활용)
+            // %-16s : 메뉴 이름 왼쪽 정렬, 16칸 확보
+            // % 5s : 가격 오른쪽 정렬, 7칸 확보
+            System.out.printf( "선택한 메뉴: %-16s | %5s |\n",
+                    choiceMenu[0],  // 상세 메뉴 이름
+                    choiceMenu[1]); // 상제 가격
+
+        System.out.println("=====================================");
     }
 }
