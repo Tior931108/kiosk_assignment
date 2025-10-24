@@ -44,14 +44,14 @@ public class Main {
         Menu dessertMenu = new Menu("Dessert", desserts);
 
         // 3. Menu 객체들을 리스트 관리
-        List<Menu> menus = new ArrayList<>(Arrays.asList(
+        List<Menu> categoryMenu = new ArrayList<>(Arrays.asList(
                 burgerMenu,
                 drinkMenu,
                 dessertMenu
         ));
 
         // 4. Kiosk 객체 생성 (세 개의 메뉴 리스트를 생성자로 전달)
-        Kiosk kiosk = new Kiosk(menus);
+        Kiosk kiosk = new Kiosk(categoryMenu);
 
         // 키오스크 프로그램 시작
         kiosk.start();
