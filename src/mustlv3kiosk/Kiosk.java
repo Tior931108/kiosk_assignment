@@ -1,6 +1,7 @@
 package mustlv3kiosk;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,70 +38,90 @@ public class Kiosk {
 
         // 주문 반복문(무한)
         while(true){
-            // 반복문 (카테고리 선택이 유효하다면)
-            // 메뉴 고르기
-            printCategoryMenu(categories);
-            int categoryChoice = sc.nextInt();
+            try {
+                // 반복문 (카테고리 선택이 유효하다면)
+                // 메뉴 고르기
+                printCategoryMenu(categories);
+                int categoryChoice = sc.nextInt();
 
-            // 종료 안내
-            if(categoryChoice == 0){
-                break;
-            }
-
-            // 선택 잘못된 입력 처리
-            if (categoryChoice < 0 || categoryChoice > categories.length) {
-                System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
-                continue;
-            }
-
-            // 선택된 메뉴 리스트
-            List<MenuItem> selectMenus = getMeunsByCategory(categoryChoice);
-
-
-            // 상세 메뉴 선택
-            while(true){
-                // 반복문 (메뉴 선택이 유효하다면)
-
-                // 버거 상세 메뉴 출력
-                printDetailMenu(categories[categoryChoice - 1], selectMenus);
-                // 숫자 선택 (1,2,3,4....)
-                int menuChoice = sc.nextInt();
-
-                // 0 누를시 카테고리 메뉴로 복귀
-                if (menuChoice == 0) {
-                    System.out.println("카테고리 선택으로 돌아갑니다.");
+                // 종료 안내
+                if(categoryChoice == 0){
                     break;
                 }
 
-                // 잘못된 입력 처리
-                if (menuChoice < 0 || menuChoice > selectMenus.size()) {
-                    System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
+                // 선택 잘못된 입력 처리
+                if (categoryChoice < 0 || categoryChoice > categories.length) {
+                    System.out.println("잘못된 입력입니다. 1~" + categories.length + " 사이의 숫자를 선택해주세요.");
                     continue;
                 }
 
-                // 선택한 메뉴
-                MenuItem choiceMenu = selectMenus.get(menuChoice - 1);
+                // 선택된 메뉴 리스트
+                List<MenuItem> selectMenus = getMeunsByCategory(categoryChoice);
 
-                // 주문 완료 안내
-                // 선택한 메뉴 이름과 가격 정보 출력
-                printChoiceMenu(choiceMenu);
 
-                break;
-            }
+                // 상세 메뉴 선택
+                boolean orderCompleted = false;
 
-            // 주문 프로그램 종료 안내
-            System.out.println("키오스크를 종료하시겠습니까?");
-            System.out.print("종료하려면 0, 계속 주문하시려면 아무 숫자나 입력해주세요 : ");
-            int yesOrNo = sc.nextInt();
-            if(yesOrNo == 0){
-                // 0 입력시 종료
-                break;
+                // 반복문 (메뉴 선택이 유효하다면)
+                while(!orderCompleted){
+                    try {
+                        // 선택 상세 메뉴 출력
+                        printDetailMenu(categories[categoryChoice - 1], selectMenus);
+                        // 숫자 선택 (1,2,3,4....)
+                        int menuChoice = sc.nextInt();
+
+                        // 0 누를시 카테고리 메뉴로 복귀
+                        if (menuChoice == 0) {
+                            System.out.println("카테고리 선택으로 돌아갑니다.");
+                            break;
+                        }
+
+                        // 유효하지 않은 숫자 입력 처리
+                        if (menuChoice < 0 || menuChoice > selectMenus.size()) {
+                            System.out.println("잘못된 입력입니다. 1~" + selectMenus.size() + " 사이의 숫자를 선택해주세요.");
+                            continue;
+                        }
+
+                        // 선택한 메뉴
+                        MenuItem choiceMenu = selectMenus.get(menuChoice - 1);
+
+                        // 주문 완료 안내
+                        // 선택한 메뉴 이름과 가격 정보 출력
+                        printChoiceMenu(choiceMenu);
+                        orderCompleted = true;
+
+                    } catch (InputMismatchException e) {
+                        System.out.println("숫자만 입력이 가능합니다. 다시 입력해주세요.");
+                        sc.nextLine(); // 버퍼 비우기
+                    }
+                }
+
+                // 주문 완료 후 계속 진행 여부 확인
+                if (orderCompleted) {
+                    try {
+                        // 주문 프로그램 종료 안내
+                        System.out.println("추가 주문을 하시겠습니까?");
+                        System.out.print("종료하려면 0, 계속 주문하시려면 아무 글자나 입력해주세요 : ");
+                        int continueChoice = sc.nextInt();
+                        if(continueChoice == 0){
+                            // 0 입력시 종료
+                            break;
+                        }
+                        System.out.println();
+
+                    } catch (InputMismatchException e) {
+                        System.out.println("계속 주문합니다.");
+                        sc.nextLine(); // 버퍼 비우기
+                    }
+                }
+            } catch (RuntimeException e) {
+                System.out.println("숫자만 입력이 가능합니다. 다시 입력해주세요.");
+                sc.nextLine(); // 버퍼 비우기
             }
         }
         System.out.println("키오스크 프로그램을 종료합니다.");
         System.out.println("이용해주셔서 감사합니다");
         sc.close();
-
     }
 
     /**
