@@ -46,6 +46,12 @@ public class MenuItem {
                 index, name, price, description);
     }
 
+    // 메뉴 정보 출력 메서드 (인덱스 없음)
+    public void printInfoInCart() {
+        System.out.printf("%-16s | W %.1f | %s\n",
+                name, price, description);
+    }
+
     // 행위 중심 : 설정한 가격이 예산 내인지 확인하는 메소드
     public boolean isPossiblePrice(double budget) {
         return this.price <= budget;

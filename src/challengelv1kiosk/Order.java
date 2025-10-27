@@ -12,11 +12,20 @@ public class Order {
     private final List<OrderItem> orderItems;
 
     // 생성자
-    public Order(List<OrderItem> orderItems) {
+    public Order() {
         this.orderItems = new ArrayList<>();
     }
 
     // 기능
+
+    /**
+     * 행위 중심: 장바구니에 항목 추가
+     */
+    public void addItem(MenuItem menuItem, int quantity) {
+        orderItems.add(new OrderItem(menuItem, quantity));
+        System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity +"개 장바구니에 추가되었습니다!");
+    }
+
     /**
      * 장바구니가 비었는지 확인
      */
@@ -59,8 +68,8 @@ public class Order {
         }
 
         // 장바구니 전체 금액 출력
-        System.out.println("\n[ Orders ]");
-        System.out.printf("W %.1f\n",  calculateTotalPrice());
+        System.out.println("\n[ Total ]");
+        System.out.printf("합계 : W %.1f\n",  calculateTotalPrice());
     }
 
     /**

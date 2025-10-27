@@ -1,9 +1,5 @@
 package challengelv1kiosk;
 
-import mustlv4kiosk.Kiosk;
-import mustlv4kiosk.Menu;
-import mustlv4kiosk.MenuItem;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

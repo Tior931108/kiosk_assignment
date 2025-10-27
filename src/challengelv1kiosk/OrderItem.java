@@ -38,7 +38,7 @@ public class OrderItem {
      * 장바구니 항목 출력
      */
     public void printCartItem() {
-        System.out.printf("%-16s | W %.1f | %d개 | 합계 : %.1f\n",
+        System.out.printf("%-16s | W %.1f | %d개 | 금액 : W %.1f\n",
                 menuItem.getName(), menuItem.getPrice(), quantity, calculatePrice());
     }
 
