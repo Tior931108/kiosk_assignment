@@ -10,7 +10,7 @@ public class OrderItem {
 
     // 생성자
     public OrderItem(MenuItem menuItem, int quantity) {
-        if(quantity <= 0) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
         }
         this.menuItem = menuItem;

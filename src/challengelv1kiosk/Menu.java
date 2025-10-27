@@ -22,6 +22,7 @@ public class Menu {
     }
 
     // 행위 중심 메소드로 이름 변경
+
     /**
      * 카테고리 이름 조회
      */
@@ -45,11 +46,12 @@ public class Menu {
 
     /**
      * 행위 중심 : 특정 인덱스 상세 메뉴 메소드
+     *
      * @param index 상세 메뉴 숫자 - 1
      * @return 상세 메뉴 리스트 반환
      */
     public MenuItem findMenuItem(int index) {
-        if(index < 0 && index >= menuItems.size()) {
+        if (index < 0 && index >= menuItems.size()) {
             throw new IndexOutOfBoundsException("잘못된 메뉴 숫자입니다.");
         }
         return menuItems.get(index);
@@ -62,7 +64,7 @@ public class Menu {
     public void printMenuItems() {
         for (int i = 0; i < menuItems.size(); i++) {
             // 상세 메뉴 가져와서 메뉴 정보 (이름, 가격, 설명) 을 출력한다.
-            menuItems.get(i).printInfo(i+1);
+            menuItems.get(i).printInfo(i + 1);
         }
     }
 

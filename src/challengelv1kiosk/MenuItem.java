@@ -42,7 +42,7 @@ public class MenuItem {
     // 행위 중심 메소드
     // 메뉴 정보 출력 메서드
     public void printInfo(int index) {
-        System.out.printf("%d, %-16s | W %.1f | %s\n",
+        System.out.printf("%d. %-16s | W %.1f | %s\n",
                 index, name, price, description);
     }
 
@@ -50,10 +50,5 @@ public class MenuItem {
     public void printInfoInCart() {
         System.out.printf("%-16s | W %.1f | %s\n",
                 name, price, description);
-    }
-
-    // 행위 중심 : 설정한 가격이 예산 내인지 확인하는 메소드
-    public boolean isPossiblePrice(double budget) {
-        return this.price <= budget;
     }
 }

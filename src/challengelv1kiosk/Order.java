@@ -23,7 +23,7 @@ public class Order {
      */
     public void addItem(MenuItem menuItem, int quantity) {
         orderItems.add(new OrderItem(menuItem, quantity));
-        System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity +"개 장바구니에 추가되었습니다!");
+        System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity + "개 장바구니에 추가되었습니다!");
     }
 
     /**
@@ -57,7 +57,7 @@ public class Order {
     public void printCartItems() {
         System.out.println("\n[ Orders ]");
 
-        if(isEmpty()) {
+        if (isEmpty()) {
             System.out.println("장바구니가 비어있습니다");
             return;
         }
@@ -69,7 +69,7 @@ public class Order {
 
         // 장바구니 전체 금액 출력
         System.out.println("\n[ Total ]");
-        System.out.printf("합계 : W %.1f\n",  calculateTotalPrice());
+        System.out.printf("합계 : W %.1f\n", calculateTotalPrice());
     }
 
     /**

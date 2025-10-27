@@ -29,7 +29,7 @@ public class Kiosk {
         printWelcomeMessage();
 
         // 주문 반복문(무한)
-        while(true){
+        while (true) {
             try {
                 // 카테고리 매뉴 출력
                 printCategoryMenu();
@@ -39,7 +39,7 @@ public class Kiosk {
 
 
                 // 0. 종료 안내
-                if(categoryChoice == 0){
+                if (categoryChoice == 0) {
                     break;
                 }
 
@@ -59,7 +59,7 @@ public class Kiosk {
                 // 선택 잘못된 입력 처리
                 if (!isValidCategoryChoice(categoryChoice)) {
                     // 장바구니가 비어있으면 카테고리 메뉴 숫자 범위
-                    if(order.isEmpty()) {
+                    if (order.isEmpty()) {
                         printInvalidInputMessage(0, categoryMenu.size());
                         continue;
                         // 장비구니가 있으면 카테고리 범위 메뉴 + 4, 5 까지 범위 확장
@@ -73,9 +73,9 @@ public class Kiosk {
                 Menu selectMenus = findMenuAt(categoryChoice - 1);
 
                 // 상세 메뉴 출력
-                if(detailMenuSelection(selectMenus)){
+                if (detailMenuSelection(selectMenus)) {
                     // 계속 주문 진행을 안한다면 종료
-                    if(!askToContinue()) {
+                    if (!askToContinue()) {
                         break;
                     }
                 }
@@ -94,12 +94,12 @@ public class Kiosk {
      * 주문 취소 처리
      */
     private void cancelOrder() {
-        if(order.isEmpty()) {
+        if (order.isEmpty()) {
             System.out.println("\n 취소할 주문이 없습니다.");
             return;
         }
 
-        while(true) {
+        while (true) {
             try {
                 System.out.println("-------------------------------------");
                 // 장바구니 출력
@@ -133,12 +133,12 @@ public class Kiosk {
      * 주문 메뉴 처리
      */
     private void processOrderMenu() {
-        if(order.isEmpty()) {
+        if (order.isEmpty()) {
             System.out.println("\n 장바구니가 비어 있습니다. 먼저 메뉴를 선택해주세요.");
             return;
         }
 
-        while(true) {
+        while (true) {
             try {
                 System.out.println("-------------------------------------");
                 // 장바구니 출력
@@ -171,7 +171,7 @@ public class Kiosk {
      * 행위 중심 : 상세 메뉴 선택 처리
      */
     private boolean detailMenuSelection(Menu menu) {
-        while(true){
+        while (true) {
             try {
                 // 선택 상세 메뉴 출력
                 printDetailMenu(menu);
@@ -208,7 +208,7 @@ public class Kiosk {
      * 장바구니에 추가할지 확인
      */
     private void askToAddCart(MenuItem choiceMenu) {
-        while(true) {
+        while (true) {
             try {
                 System.out.println("-------------------------------------");
                 System.out.print("\n선택한 메뉴 : ");
@@ -253,7 +253,7 @@ public class Kiosk {
     private boolean askToContinue() {
         try {
             // 장바구니가 있다면 목록 출력
-            if(!order.isEmpty()) {
+            if (!order.isEmpty()) {
                 System.out.println("------------[주문 예정 내역]-----------");
                 order.printCartItems();
                 System.out.println("-------------------------------------");
@@ -267,7 +267,7 @@ public class Kiosk {
                 System.out.println("-------------------------------------");
 
                 return continueChoice != 0;
-            // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
+                // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
             } else {
                 System.out.println("선택한 메뉴가 없습니다.");
                 return true;
@@ -282,6 +282,7 @@ public class Kiosk {
 
     /**
      * 행위 중심 : 카테고리 선택 유효성 검증
+     *
      * @param choice 입력 숫자
      * @return 입력 숫자가 카테고리 메뉴 숫자 범위 안인지 확인
      */
@@ -291,8 +292,9 @@ public class Kiosk {
 
     /**
      * 행위 중심 : 상세 메뉴 선택 유효성 검증
+     *
      * @param choice 입력 숫자
-     * @param menu 선택한 카테고리 메뉴
+     * @param menu   선택한 카테고리 메뉴
      * @return 입력 숫자가 상세 메뉴 숫자 범위 안인지 확인
      */
     private boolean isValidMenuChoice(int choice, Menu menu) {
@@ -325,13 +327,13 @@ public class Kiosk {
         System.out.println("맛있다 버거러 메뉴 입니다. 메뉴를 골라주세요.");
 
         // Menu 객체들의 카테고리 이름 출력
-        for (int i = 0; i < categoryMenu.size() ; i++) {
-            System.out.println((i + 1) + ". " +  categoryMenu.get(i).getCategoryName());
+        for (int i = 0; i < categoryMenu.size(); i++) {
+            System.out.println((i + 1) + ". " + categoryMenu.get(i).getCategoryName());
         }
 
         System.out.println("0. 종료");
         // 장바구니가 있는 경우에만 출력
-        if(!order.isEmpty()) {
+        if (!order.isEmpty()) {
             System.out.println("=========[ ORDER MENU ]=========");
             System.out.println("4. Orders     | 장바구니를 확인 후 주문합니다.");
             System.out.println("5. Cancel     | 진행중인 주문을 취소합니다.");
