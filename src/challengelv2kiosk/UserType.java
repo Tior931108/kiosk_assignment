@@ -35,7 +35,7 @@ public enum UserType {
     /**
      * 할인율 퍼센트로 표시
      */
-    public String discountPersantage() {
+    public String discountPercentage() {
         return String.format("%.0f%%", discountRate * 100);
     }
 }
