@@ -153,8 +153,8 @@ public class Kiosk {
                 order.printCartItems();
                 System.out.println("-------------------------------------");
 
-                System.out.println("\n진행중인 주문을 전체 취소하시겠습니까?");
-                System.out.println("1. 네       2. 아니오");
+                System.out.println("\n진행중인 주문을 취소하시겠습니까?");
+                System.out.println("1. 전체 취소       2. 특정 메뉴 제외하기   3. 장바구니 유지하기");
                 System.out.print("입력: ");
 
                 int cancelChoice = sc.nextInt();
@@ -164,10 +164,14 @@ public class Kiosk {
                     System.out.println("\n주문이 취소되었습니다.");
                     return;
                 } else if (cancelChoice == 2) {
+                    // 특정 메뉴 제거
+                    removeItemFromCart();
+                    return;
+                } else if (cancelChoice == 3) {
                     System.out.println("\n장바구니를 유지합니다.");
                     return;
                 } else {
-                    System.out.println("\n1 또는 2를 입력해주세요.");
+                    System.out.println("\n1, 2, 3 중에 숫자를 입력해주세요.");
                 }
             } catch (Exception e) {
                 printNumberOnlyMessage();
@@ -192,7 +196,7 @@ public class Kiosk {
                 order.printCartItems();
                 System.out.println("-------------------------------------");
 
-                System.out.println("\n1. 주문하기   2. 메인 메뉴로 돌아가기  3. 특정 메뉴 제외하기");
+                System.out.println("\n1. 주문하기   2. 메인 메뉴로 돌아가기 ");
                 System.out.print("입력: ");
 
                 int orderChoice = sc.nextInt();
@@ -206,12 +210,8 @@ public class Kiosk {
                 } else if (orderChoice == 2) {
                     System.out.println("\n메인 메뉴로 돌아갑니다.");
                     return;
-                } else if (orderChoice == 3) {
-                    // 특정 메뉴 제거
-                    removeItemFromCart();
-                    return;
                 } else {
-                    System.out.println("\n1,2,3 중에 숫자를 입력해주세요.");
+                    System.out.println("\n1 또는 2 중에 숫자를 입력해주세요.");
                 }
             } catch (Exception e) {
                 printNumberOnlyMessage();
@@ -228,7 +228,7 @@ public class Kiosk {
             try {
                 System.out.println("\n제외할 메뉴 전체 이름을 입력해주세요");
                 System.out.print("메뉴 이름 입력 : ");
-                sc.nextLine(); // 버퍼 비우기
+                sc.nextLine();
                 String menuName = sc.nextLine();
 
                 // 제외할려는 메뉴가 맞는지 재확인
@@ -238,12 +238,13 @@ public class Kiosk {
                     // 입력한 메뉴 이름이 동일하다면 제거
                     order.removeOrderItemByName(menuName);
                     System.out.println("\n '" + menuName + "'(이)가 장바구니에서 제거되었습니다.");
-                    return;
+                    break;
                 } else {
                     System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
+                    break;
                 }
             } catch (Exception e) {
-                throw new InputMismatchException("영단어만 입력이 가능합니다. 다시 입력해주세요.");
+                throw new InputMismatchException("문자만 입력이 가능합니다. 다시 입력해주세요.");
             }
         }
     }
