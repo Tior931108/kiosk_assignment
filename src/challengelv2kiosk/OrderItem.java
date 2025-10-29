@@ -27,6 +27,13 @@ public class OrderItem {
         return this.quantity;
     }
 
+    public void increaseQuantity(int amount) {
+        if(amount <= 0) {
+            throw new IllegalArgumentException("증가 수량은 1이상이어야 합니다.");
+        }
+        this.quantity += amount;
+    }
+
     /**
      * 수량 감소 메소드
      *

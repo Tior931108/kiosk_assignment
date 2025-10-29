@@ -23,8 +23,19 @@ public class Order {
      * 행위 중심: 장바구니에 항목 추가
      */
     public void addItem(MenuItem menuItem, int quantity) {
-        orderItems.add(new OrderItem(menuItem, quantity));
-        System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity + "개 장바구니에 추가되었습니다!");
+        // 이미 장바구니에 같은 메뉴가 있는지 확인
+        OrderItem existingItem = findOrderItemByName(menuItem.getName());
+
+        // 같은 메뉴가 있으면 수량만 즐가
+        if (existingItem != null) {
+            existingItem.increaseQuantity(quantity);
+            System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity + "개 추가되어 총 " + existingItem.quantity() + "개가 되었습니다!");
+        } else {
+            // 새로운 항목 추가
+            orderItems.add(new OrderItem(menuItem, quantity));
+            System.out.println("\n" + menuItem.getName() + "(이)가 " + quantity + "개 장바구니에 추가되었습니다!");
+        }
+
     }
 
     /**
@@ -98,7 +109,7 @@ public class Order {
      */
     public OrderItem findOrderItemByName(String menuName) {
         return orderItems.stream()
-                .filter(orderItem -> orderItem.menuItem().getName().toLowerCase().equalsIgnoreCase(menuName.toLowerCase()))
+                .filter(orderItem -> orderItem.menuItem().getName().equalsIgnoreCase(menuName.toLowerCase()))
                 .findFirst()
                 .orElse(null);
     }
