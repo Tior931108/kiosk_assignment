@@ -56,15 +56,17 @@ src/
 ```
 ## 🧑‍🏫 클래스 다이어그램
 <img width="1059" height="495" alt="image" src="https://github.com/user-attachments/assets/41caa6c3-ea77-4faa-ad59-00254424eeec" />
+
 - **집합 관계(1:多)**
-  : Kiosk - Menu
-  : Menu - MenuItem
-  : Order - OrderItem
+- Kiosk - Menu
+- Menu - MenuItem
+- Order - OrderItem
+  
 - **연관 관계(1:1)**
-  : Kiosk - UserType
-  : Kiosk - KioskView
-  : Kiosk - Order
-  : OrderItem - MenuItem
+- Kiosk - UserType
+- Kiosk - KioskView
+- Kiosk - Order
+- OrderItem - MenuItem
 
 ## 🚀 실행 방법
 
