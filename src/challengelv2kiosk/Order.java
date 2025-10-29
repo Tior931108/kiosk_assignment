@@ -70,7 +70,7 @@ public class Order {
     public boolean printCartFilterByName(String keyword) {
         List<OrderItem> filtered = orderItems.stream()
                 .filter(orderItem -> orderItem.menuItem().getName().toLowerCase()
-                        .contains(keyword.toLowerCase()))
+                        .equalsIgnoreCase(keyword.toLowerCase()))
                 .collect(Collectors.toList());
 
         // 삭제할려는 장바구니 이름이 맞는지 확인, 있으면 true, 없으면(비어있으면) false
