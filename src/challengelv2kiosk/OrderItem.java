@@ -29,6 +29,7 @@ public class OrderItem {
 
     /**
      * 수량 감소 메소드
+     *
      * @param quantity 감소 시킬 수량
      * @return 수량이 0이 되면 true, 아니면 false
      */
@@ -36,7 +37,7 @@ public class OrderItem {
         if (quantity <= 0) {
             throw new IllegalArgumentException("감소 수량은 1 이상이어야 합니다.");
         }
-        if(quantity > this.quantity) {
+        if (quantity > this.quantity) {
             throw new IllegalArgumentException("감소 수량이 현재 수량보다 많습니다.");
         }
 

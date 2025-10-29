@@ -105,6 +105,7 @@ public class Order {
 
     /**
      * 특정 메뉴 수량만큼 제거 - 스트림 활용
+     *
      * @param menuName 제거할 메뉴 이름
      * @param quantity 제거할 수량
      * @return 제거 성공 여부
@@ -165,14 +166,14 @@ public class Order {
         System.out.printf("합계 : W %.1f\n", originalPrice);
 
         // 일반인이 아니라면
-        if(userType != UserType.GENERAL) {
+        if (userType != UserType.GENERAL) {
             System.out.printf("할인 (%s %s) : -W %.3f\n",
                     userType.displayName(),
                     userType.discountPercentage(),
                     discountAmount);
             System.out.printf("최종 금액 : W %.3f\n", discountedTotal);
-        // 일반인이면
-        } else  {
+            // 일반인이면
+        } else {
             System.out.printf("최종 금액 : W %.1f\n", originalPrice);
         }
     }

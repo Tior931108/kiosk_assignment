@@ -127,8 +127,8 @@ public class Kiosk {
                     break;
             }
             System.out.printf("\n%s(으)로 설정되었습니다. (할인율: %s)\n"
-                    ,currentUserType.displayName()
-                    ,currentUserType.discountPercentage());
+                    , currentUserType.displayName()
+                    , currentUserType.discountPercentage());
 
         } catch (Exception e) {
             System.out.println("\n잘못된 입력 입니다. 일반으로 설정됩니다.");
@@ -234,7 +234,7 @@ public class Kiosk {
                 // 제외할려는 메뉴가 맞는지 재확인
                 boolean filtered = order.printCartFilterByName(menuName);
 
-                if(filtered) {
+                if (filtered) {
                     // 메뉴 이름에 해당하는 장바구니 메뉴
                     OrderItem targetItem = order.findOrderItemByName(menuName);
 
@@ -392,13 +392,13 @@ public class Kiosk {
                     sc.nextLine();
                     return true;
                 }
-            // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
+                // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
             } else {
                 System.out.println("선택한 메뉴가 없습니다.");
                 sc.nextLine();
                 return true;
             }
-        // 임의의 글자 입력하는경우
+            // 임의의 글자 입력하는경우
         } catch (Exception e) {
             System.out.println("계속 주문 합니다.");
             sc.nextLine();
