@@ -1,6 +1,7 @@
 package challengelv2kiosk;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -223,20 +224,27 @@ public class Kiosk {
      * 장바구니에서 특정 메뉴 제거 - 스트림 활용
      */
     private void removeItemFromCart() {
-        System.out.println("\n제외할 메뉴 전체 이름을 입력해주세요");
-        System.out.print("메뉴 이름 입력 : ");
-        sc.nextLine(); // 버퍼 비우기
-        String menuName = sc.nextLine();
+        while (true) {
+            try {
+                System.out.println("\n제외할 메뉴 전체 이름을 입력해주세요");
+                System.out.print("메뉴 이름 입력 : ");
+                sc.nextLine(); // 버퍼 비우기
+                String menuName = sc.nextLine();
 
-        // 제외할려는 메뉴가 맞는지 재확인
-        boolean filtered = order.printCartFilterByName(menuName);
+                // 제외할려는 메뉴가 맞는지 재확인
+                boolean filtered = order.printCartFilterByName(menuName);
 
-        if(filtered) {
-            // 입력한 메뉴 이름이 동일하다면 제거
-            order.removeOrderItemByName(menuName);
-            System.out.println("\n '" + menuName + "'(이)가 장바구니에서 제거되었습니다.");
-        } else {
-            System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
+                if(filtered) {
+                    // 입력한 메뉴 이름이 동일하다면 제거
+                    order.removeOrderItemByName(menuName);
+                    System.out.println("\n '" + menuName + "'(이)가 장바구니에서 제거되었습니다.");
+                    return;
+                } else {
+                    System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
+                }
+            } catch (Exception e) {
+                throw new InputMismatchException("영단어만 입력이 가능합니다. 다시 입력해주세요.");
+            }
         }
     }
 
