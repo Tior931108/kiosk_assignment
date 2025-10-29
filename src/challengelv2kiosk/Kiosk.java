@@ -14,6 +14,7 @@ public class Kiosk {
     private final Order order; // 장바구니 추가
     private UserType currentUserType; // 사용자 유형 추가
     private final Scanner sc;
+    private final KioskView view; // view UI전용클래스 추가
 
     // 생성자 : Menu 리스트를 전달받음
     public Kiosk(List<Menu> categoryMenu) {
@@ -22,6 +23,7 @@ public class Kiosk {
         this.order = new Order();
         this.currentUserType = UserType.GENERAL;
         this.sc = new Scanner(System.in);
+        this.view = new KioskView();
     }
 
     /**
@@ -29,13 +31,13 @@ public class Kiosk {
      */
     public void start() {
         // 식당 환영 안내문
-        printWelcomeMessage();
+        view.printWelcomeMessage();
 
         // 주문 반복문(무한)
         while (true) {
             try {
                 // 카테고리 매뉴 출력
-                printCategoryMenu();
+                view.printCategoryMenu(categoryMenu, !order.isEmpty());
 
                 // 메뉴 고르기
                 int categoryChoice = sc.nextInt();
@@ -65,11 +67,11 @@ public class Kiosk {
                 if (!isValidCategoryChoice(categoryChoice)) {
                     // 장바구니가 비어있으면 카테고리 메뉴 숫자 범위
                     if (order.isEmpty()) {
-                        printInvalidInputMessage(0, categoryMenu.size());
+                        view.printInvalidInputMessage(0, categoryMenu.size());
                         continue;
                         // 장비구니가 있으면 카테고리 범위 메뉴 + 4, 5 까지 범위 확장
                     } else {
-                        printInvalidInputMessage(0, categoryMenu.size() + 2);
+                        view.printInvalidInputMessage(0, categoryMenu.size() + 2);
                         continue;
                     }
                 }
@@ -86,12 +88,12 @@ public class Kiosk {
                 }
 
             } catch (Exception e) {
-                printNumberOnlyMessage();
+                view.printCorrectTypeOnlyMessage("숫자");
                 sc.nextLine(); // 버퍼 비우기
             }
         }
         // 종료 안내
-        printGoodbyeMessage();
+        view.printGoodbyeMessage();
         sc.close();
     }
 
@@ -99,39 +101,39 @@ public class Kiosk {
      * 사용자 유형 선택 : Enum 활용
      */
     private void selectUserType() {
-        System.out.println("\n할인 정보를 입력해주세요. (잘못 입력하실경우 일반으로 설정됩니다.)");
-        System.out.printf("1. %-8s : %s\n", UserType.VETERAN.displayName(), UserType.VETERAN.discountPercentage());
-        System.out.printf("2. %-10s : %s\n", UserType.SOLDIER.displayName(), UserType.SOLDIER.discountPercentage());
-        System.out.printf("3. %-10s : %s\n", UserType.STUDENT.displayName(), UserType.STUDENT.discountPercentage());
-        System.out.printf("4. %-10s : %s\n", UserType.GENERAL.displayName(), UserType.GENERAL.discountPercentage());
-        System.out.print("입력 : ");
+        // 사용자 유형 및 할인율 안내 _ 잘못 입력할 경우 일반으로 설정
+        view.printUserTypeSelection();
 
         try {
             int userTypeChoice = sc.nextInt();
 
             switch (userTypeChoice) {
                 case 1:
+                    // 1. 국가유공자 선택 : 10% 할인
                     currentUserType = UserType.VETERAN;
                     break;
                 case 2:
+                    // 2. 군인 선택 : 5% 할인
                     currentUserType = UserType.SOLDIER;
                     break;
                 case 3:
+                    // 3. 학생 선택 : 3% 할인
                     currentUserType = UserType.STUDENT;
                     break;
                 case 4:
+                    // 4. 일반인 선택 : 0%
                     currentUserType = UserType.GENERAL;
                     break;
                 default:
+                    // 잘못 입력할때도 일반인
                     currentUserType = UserType.GENERAL;
                     break;
             }
-            System.out.printf("\n%s(으)로 설정되었습니다. (할인율: %s)\n"
-                    , currentUserType.displayName()
-                    , currentUserType.discountPercentage());
+
+            view.printUserTypeConfirmation(currentUserType);
 
         } catch (Exception e) {
-            System.out.println("\n잘못된 입력 입니다. 일반으로 설정됩니다.");
+            view.printInvalidUserTypeInput();
             currentUserType = UserType.GENERAL;
             sc.nextLine();
         }
@@ -142,39 +144,38 @@ public class Kiosk {
      */
     private void cancelOrder() {
         if (order.isEmpty()) {
-            System.out.println("\n 취소할 주문이 없습니다.");
+            view.printNoCancelOrder();
             return;
         }
 
         while (true) {
             try {
-                System.out.println("------------[취소 예정 내역]-----------");
+                view.printCancelHeader();
                 // 장바구니 출력
                 order.printCartItems();
-                System.out.println("-------------------------------------");
-
-                System.out.println("\n진행중인 주문을 취소하시겠습니까?");
-                System.out.println("1. 전체 취소       2. 특정 메뉴 제외하기   3. 장바구니 유지하기");
-                System.out.print("입력: ");
+                view.printAskCancelOrder();
 
                 int cancelChoice = sc.nextInt();
 
+                // 1. 전체 취소
                 if (cancelChoice == 1) {
                     order.clearCart();
-                    System.out.println("\n주문이 취소되었습니다.");
+                    view.printOrderCancelled();
                     return;
                 } else if (cancelChoice == 2) {
-                    // 특정 메뉴 제거
+                    // 2. 특정 메뉴 제거
                     removeItemFromCart();
                     return;
                 } else if (cancelChoice == 3) {
-                    System.out.println("\n장바구니를 유지합니다.");
+                    // 3. 장바구니 유지
+                    view.printKeepCart();
                     return;
                 } else {
-                    System.out.println("\n1, 2, 3 중에 숫자를 입력해주세요.");
+                    // 잘못 입력 할 경우 1,2,3 중에 입력 안내
+                    view.printInvalidChoice("1, 2, 3");
                 }
             } catch (Exception e) {
-                printNumberOnlyMessage();
+                view.printCorrectTypeOnlyMessage("숫자");
                 sc.nextLine();
             }
         }
@@ -185,19 +186,19 @@ public class Kiosk {
      */
     private void processOrderMenu() {
         if (order.isEmpty()) {
-            System.out.println("\n 장바구니가 비어 있습니다. 먼저 메뉴를 선택해주세요.");
+            view.printEmptyCart();
             return;
         }
 
         while (true) {
             try {
-                System.out.println("------------[장바구니 내역]------------");
+                view.printCartHeader();
                 // 장바구니 출력
                 order.printCartItems();
-                System.out.println("-------------------------------------");
+                view.printDivider();
 
-                System.out.println("\n1. 주문하기   2. 메인 메뉴로 돌아가기 ");
-                System.out.print("입력: ");
+                // 1. 주문하기 2. 메인 메뉴 돌아가기
+                view.printAskOrderOrBack();
 
                 int orderChoice = sc.nextInt();
 
@@ -208,13 +209,13 @@ public class Kiosk {
                     printOrderConfirmation();
                     return;
                 } else if (orderChoice == 2) {
-                    System.out.println("\n메인 메뉴로 돌아갑니다.");
+                    view.printBackToMainMenu();
                     return;
                 } else {
-                    System.out.println("\n1 또는 2 중에 숫자를 입력해주세요.");
+                    view.printInvalidChoice("1 또는 2");
                 }
             } catch (Exception e) {
-                printNumberOnlyMessage();
+                view.printCorrectTypeOnlyMessage("숫자");
                 sc.nextLine();
             }
         }
@@ -226,33 +227,33 @@ public class Kiosk {
     private void removeItemFromCart() {
         while (true) {
             try {
-                System.out.println("\n제외할 메뉴 전체 이름을 입력해주세요");
-                System.out.print("메뉴 이름 입력 : ");
+                view.printAskRemoveMenuName();
                 sc.nextLine();
                 String menuName = sc.nextLine();
 
                 // 제외할려는 메뉴가 맞는지 재확인
                 boolean filtered = order.printCartFilterByName(menuName);
 
+                // 입력한 메뉴 이름과 동일한경우
                 if (filtered) {
                     // 메뉴 이름에 해당하는 장바구니 메뉴
                     OrderItem targetItem = order.findOrderItemByName(menuName);
 
                     // 현재 수량 표시
-                    System.out.println("\n현재 '" + menuName + "' 수량: " + targetItem.quantity() + "개");
-                    System.out.print("제외할 수량을 입력해주세요 (전체 제외는 " + targetItem.quantity() + " 입력): ");
+                    view.printCurrentQuantity(menuName, targetItem.quantity());
 
                     int removeQuantity = sc.nextInt();
 
                     // 수량 유효성 검사
+                    // 수량은 0이하일수 없음
                     if (removeQuantity <= 0) {
-                        System.out.println("\n수량은 1 이상이어야 합니다.");
+                        view.printInvalidQuantity();
                         continue;
                     }
 
+                    // 수량은 현재 장바구니에 있는 갯수보다 많을 수 없음
                     if (removeQuantity > targetItem.quantity()) {
-                        System.out.println("\n입력한 수량(" + removeQuantity + "개)이 장바구니의 수량("
-                                + targetItem.quantity() + "개)보다 많습니다.");
+                        view.printQuantityExceeded(removeQuantity, targetItem.quantity());
                         continue;
                     }
 
@@ -264,24 +265,21 @@ public class Kiosk {
 
                     if (removeQuantity == originalQuantity) {
                         // 전체 제거된 경우
-                        System.out.println("\n'" + menuName + "' " + removeQuantity
-                                + "개가 장바구니에서 완전히 제거되었습니다.");
+                        view.printMenuRemovedCompletely(menuName, removeQuantity);
                     } else {
                         // 일부만 제거된 경우 (남은 수량 = 원래 수량 - 제거 수량)
                         int remainingQuantity = originalQuantity - removeQuantity;
-                        System.out.println("\n'" + menuName + "' " + removeQuantity
-                                + "개가 제거되었습니다. (남은 수량: "
-                                + remainingQuantity + "개)");
+                        view.printMenuRemovedPartially(menuName, removeQuantity, remainingQuantity);
                     }
-
                     break;
 
                 } else {
-                    System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
+                    // 입력한 메뉴 이름과 동일하지 않은 경우
+                    view.printMenuNotFound(menuName);
                     break;
                 }
             } catch (Exception e) {
-                throw new InputMismatchException("문자만 입력이 가능합니다. 다시 입력해주세요.");
+                view.printCorrectTypeOnlyMessage("문자");
             }
         }
     }
@@ -293,20 +291,20 @@ public class Kiosk {
         while (true) {
             try {
                 // 선택 상세 메뉴 출력
-                printDetailMenu(menu);
+                view.printDetailMenu(menu);
 
                 // 숫자 선택 (1,2,3,4....)
                 int menuChoice = sc.nextInt();
 
                 // 0 누를시 카테고리 메뉴로 복귀
                 if (menuChoice == 0) {
-                    System.out.println("메인 메뉴 선택으로 돌아갑니다.");
+                    view.printBackToMainMenu();
                     return false;
                 }
 
                 // 유효하지 않은 숫자 입력 처리
                 if (!isValidMenuChoice(menuChoice, menu)) {
-                    printInvalidInputMessage(0, menu.size());
+                    view.printInvalidInputMessage(0, menu.size());
                     continue;
                 }
 
@@ -317,7 +315,7 @@ public class Kiosk {
                 askToAddCart(choiceMenu);
                 return true;
             } catch (Exception e) {
-                printNumberOnlyMessage();
+                view.printCorrectTypeOnlyMessage("숫자");
                 sc.nextLine();
             }
         }
@@ -329,38 +327,39 @@ public class Kiosk {
     private void askToAddCart(MenuItem choiceMenu) {
         while (true) {
             try {
-                System.out.println("-------------------------------------");
-                System.out.print("\n선택한 메뉴 : ");
-                choiceMenu.printInfoInCart();
-                System.out.println("\n-------------------------------------");
-                System.out.println("\n위 메뉴를 장바구니에 추가하시겠습니까?");
-                System.out.println("1. 확인       2. 취소");
-                System.out.print("입력: ");
+                // 선택한 메뉴를 장바구니에 추가할지 안내
+                view.printSelectedMenu(choiceMenu);
 
                 int cartChoice = sc.nextInt();
 
+                // 장바구니에 추가
                 if (cartChoice == 1) {
                     // 수량 입력
-                    System.out.print("수량을 입력해주세요: ");
+                    view.printAskQuantity();
                     int quantity = sc.nextInt();
 
+                    // 수량 유효성 : 수량은 1이상이어야함
                     if (quantity <= 0) {
-                        System.out.println("\n수량은 1 이상이어야 합니다.");
+                        view.printInvalidQuantity();
                         continue;
                     }
 
+                    // 입력한 수량만큼 상세 메뉴를 장바구니에 추가
                     order.addItem(choiceMenu, quantity);
                     return;
 
+
                 } else if (cartChoice == 2) {
-                    System.out.println("\n취소되었습니다.");
+                    // 장바구니에 추가하지 않음
+                    view.printCancelled();
                     return;
                 } else {
-                    System.out.println("\n1 또는 2를 입력해주세요.");
+                    // 잘못 입력
+                    view.printInvalidChoice("1 또는 2");
                 }
 
             } catch (Exception e) {
-                printNumberOnlyMessage();
+                view.printCorrectTypeOnlyMessage("숫자");
                 sc.nextLine();
             }
         }
@@ -373,11 +372,10 @@ public class Kiosk {
         try {
             // 장바구니가 있다면 목록 출력
             if (!order.isEmpty()) {
-                System.out.println("------------[주문 예정 내역]-----------");
-                order.printCartItems();
-                System.out.println("-------------------------------------");
-                System.out.println("\n추가 주문을 하시겠습니까?");
-                System.out.print("최종 주문하시려면 0, 계속 추가 주문하시려면 아무 글자나 입력해주세요 : ");
+                // 주문 예정 내역 출력
+                view.printOrderPreview(order);
+                // 0 누르면 최종 주문 및 메인 메뉴 복귀 , 그외 아무 문자 누르면 바로 주문 안하고 메인 메뉴 복귀
+                view.printAskContinueOrder();
                 int continueChoice = sc.nextInt();
 
                 if (continueChoice == 0) {
@@ -388,24 +386,47 @@ public class Kiosk {
                     return true;
                 } else {
                     // 아무 숫자 입력할 경우
-                    System.out.println("계속 주문 합니다.");
+                    view.printContinueOrdering();
                     sc.nextLine();
                     return true;
                 }
-                // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
+
             } else {
-                System.out.println("선택한 메뉴가 없습니다.");
+                // 장바구니 내역이 없고, 주문하지 않았는데 취소하는 경우,
+                view.printNoSelectedMenu();
                 sc.nextLine();
                 return true;
             }
-            // 임의의 글자 입력하는경우
+
         } catch (Exception e) {
-            System.out.println("계속 주문 합니다.");
+            // 임의의 글자 입력하는경우
+            view.printContinueOrdering();
             sc.nextLine();
             return true;
         }
     }
 
+
+
+    /**
+     * 할인 적용하여 최종 주문 출력 하는 메소드
+     */
+    private void printOrderConfirmation() {
+        view.printFinalOrderHeader();
+
+        if (currentUserType != UserType.GENERAL) {
+            // 일반인이 아닌경우 할인내역 출력
+            order.printCartDiscount(currentUserType);
+        } else {
+            // 일반인인 경우
+            order.printCartItems();
+        }
+
+        view.printOrderCompleteMessage();
+
+        // 주문완료 후 장바구니 비우기
+        order.clearCart();
+    }
 
     /**
      * 행위 중심 : 카테고리 선택 유효성 검증
@@ -433,85 +454,5 @@ public class Kiosk {
      */
     private Menu findMenuAt(int index) {
         return categoryMenu.get(index);
-    }
-
-
-    // ================ UI 및 출력 관련 메소드 : 행위 중심 메소드 이름으로 변경 ====================
-    private void printWelcomeMessage() {
-        // 식당 안내문
-        System.out.println("=====================================");
-        System.out.println("어서오세요. 맛있다 버거러 오신걸 환영합니다.");
-        System.out.println("저희 식당은 청결함과 친절함을 강조합니다.");
-        System.out.println("많은 이용바랍니다.");
-        System.out.println("=====================================");
-    }
-
-    /**
-     * 카테고리 메뉴 출력 메소드
-     */
-    private void printCategoryMenu() {
-        System.out.println("=========[ SHAKESHACK MENU ]=========");
-        System.out.println("맛있다 버거러 메뉴 입니다. 메뉴를 골라주세요.");
-
-        // Menu 객체들의 카테고리 이름 출력
-        for (int i = 0; i < categoryMenu.size(); i++) {
-            System.out.println((i + 1) + ". " + categoryMenu.get(i).getCategoryName());
-        }
-
-        System.out.println("0. 종료");
-        // 장바구니가 있는 경우에만 출력
-        if (!order.isEmpty()) {
-            System.out.println("==========[ ORDER MENU ]==========");
-            System.out.println("4. Orders     | 장바구니를 확인 후 주문합니다.");
-            System.out.println("5. Cancel     | 진행중인 주문을 취소합니다.");
-        }
-        System.out.println("=====================================");
-        System.out.print("입력 : ");
-    }
-
-    private void printGoodbyeMessage() {
-        System.out.println("키오스크 프로그램을 종료합니다.");
-        System.out.println("이용해주셔서 감사합니다");
-    }
-
-    /**
-     * 상세 메뉴 출력 메소드
-     */
-    private void printDetailMenu(Menu categoryMenu) {
-        System.out.println("==========[ " + categoryMenu.getCategoryName().toUpperCase() + " MENU ]==========");
-        System.out.println(categoryMenu.getCategoryName().toUpperCase() + " 메뉴 입니다. 원하는 음식을 골라주세요.");
-
-        // Menu 객체의 메소드를 통해서 상세 메뉴 아이템 출력
-        categoryMenu.printMenuItems();
-
-        System.out.println("0. 뒤로가기");
-        System.out.println("=====================================");
-        System.out.print("입력 : ");
-    }
-
-    /**
-     * 선택 메뉴 출력 메소드 - 할인 적용하여 최종 주문 출력
-     */
-    private void printOrderConfirmation() {
-
-        System.out.println("------------[최종 주문 내역]-----------");
-        if (currentUserType != UserType.GENERAL) {
-            // 일반인이 아닌경우 할인내역 출력
-            order.printCartDiscount(currentUserType);
-        } else {
-            // 일반인인 경우
-            order.printCartItems();
-        }
-        System.out.println("=======[ 주문이 완료되었습니다! ]========");
-
-        order.clearCart();
-    }
-
-    private void printInvalidInputMessage(int min, int max) {
-        System.out.println("잘못된 입력 입니다. " + min + "~" + max + " 사이의 숫자를 입력해주세요.");
-    }
-
-    private void printNumberOnlyMessage() {
-        System.out.println("숫자만 입력이 가능합니다. 다시 입력해주세요.");
     }
 }
