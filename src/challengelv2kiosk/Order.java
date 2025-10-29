@@ -28,17 +28,24 @@ public class Order {
     }
 
     /**
+     * 읽기 전용 뷰
+     */
+    public List<OrderItem> cartItems() {
+        return Collections.unmodifiableList(orderItems);
+    }
+
+    /**
      * 장바구니가 비었는지 확인
      */
     public boolean isEmpty() {
-        return orderItems.isEmpty();
+        return cartItems().isEmpty();
     }
 
     /**
      * 장바구니 항목 갯수
      */
     public int cartSize() {
-        return orderItems.size();
+        return cartItems().size();
     }
 
     /**
@@ -60,19 +67,20 @@ public class Order {
     /**
      * 특정 메뉴 이름으로 필터링하여 장바구니 출력 - 스트림활용
      */
-    public void printCartFilterByName(String keyword) {
+    public boolean printCartFilterByName(String keyword) {
         List<OrderItem> filtered = orderItems.stream()
                 .filter(orderItem -> orderItem.menuItem().getName().toLowerCase()
                         .contains(keyword.toLowerCase()))
                 .collect(Collectors.toList());
+
+        // 삭제할려는 장바구니 이름이 맞는지 확인, 있으면 true, 없으면(비어있으면) false
+        return !filtered.isEmpty();
     }
 
     /**
      * 특정 메뉴 제거 - 스트림 활용
      */
-    public boolean removeOrderItemByName(String menuName) {
-        int originalSize = orderItems.size();
-
+    public void removeOrderItemByName(String menuName) {
         // 스트림을 사용하여 해당 메뉴를 제외한 리스트 생성
         List<OrderItem> filteredItems = orderItems.stream()
                 .filter(orderItem -> !orderItem.menuItem().getName().equalsIgnoreCase(menuName))
@@ -82,7 +90,6 @@ public class Order {
         orderItems.clear();
         orderItems.addAll(filteredItems);
 
-        return orderItems.size() < originalSize;
     }
 
     /**
@@ -141,7 +148,6 @@ public class Order {
         }
     }
 
-
     /**
      * 주문 완료시 장바구니 전체 비움
      */
@@ -149,10 +155,4 @@ public class Order {
         orderItems.clear();
     }
 
-    /**
-     * 읽기 전용 뷰
-     */
-    public List<OrderItem> cartItems() {
-        return Collections.unmodifiableList(orderItems);
-    }
 }

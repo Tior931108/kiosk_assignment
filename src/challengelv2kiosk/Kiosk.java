@@ -224,18 +224,20 @@ public class Kiosk {
      */
     private void removeItemFromCart() {
         System.out.println("\n제외할 메뉴 전체 이름을 입력해주세요");
-        System.out.print("입력 : ");
+        System.out.print("메뉴 이름 입력 : ");
         sc.nextLine(); // 버퍼 비우기
         String menuName = sc.nextLine();
 
-        boolean removed = order.removeOrderItemByName(menuName);
+        // 제외할려는 메뉴가 맞는지 재확인
+        boolean filtered = order.printCartFilterByName(menuName);
 
-        if (removed) {
+        if(filtered) {
+            // 입력한 메뉴 이름이 동일하다면 제거
+            order.removeOrderItemByName(menuName);
             System.out.println("\n '" + menuName + "'(이)가 장바구니에서 제거되었습니다.");
         } else {
             System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
         }
-
     }
 
     /**
