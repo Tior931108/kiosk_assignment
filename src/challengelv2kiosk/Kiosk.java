@@ -279,7 +279,7 @@ public class Kiosk {
                     break;
                 }
             } catch (Exception e) {
-                view.printCorrectTypeOnlyMessage("문자");
+                view.printCorrectTypeOnlyMessage("질문에 맞는 (문자or숫자)");
             }
         }
     }
@@ -405,7 +405,6 @@ public class Kiosk {
             return true;
         }
     }
-
 
 
     /**
