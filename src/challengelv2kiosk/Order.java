@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  */
 public class Order {
     // 속성
-    private final List<OrderItem> orderItems;
+    private List<OrderItem> orderItems; // 가변 객체로 변경
 
     // 생성자
     public Order() {
@@ -73,23 +73,52 @@ public class Order {
                         .equalsIgnoreCase(keyword.toLowerCase()))
                 .collect(Collectors.toList());
 
+//        System.out.println(filtered);
         // 삭제할려는 장바구니 이름이 맞는지 확인, 있으면 true, 없으면(비어있으면) false
         return !filtered.isEmpty();
     }
 
+//    /**
+//     * 특정 메뉴 제거 - 스트림 활용
+//     */
+//    public void removeOrderItemByName(String menuName) {
+//        // 스트림을 사용하여 해당 메뉴를 제외한 리스트 생성
+//        List<OrderItem> filteredItems = orderItems.stream()
+//                .filter(orderItem -> !orderItem.menuItem().getName().equalsIgnoreCase(menuName))
+//                        .collect(Collectors.toList());
+//
+//        // 원본 리스트를 교체
+//        orderItems.clear();
+//        orderItems.addAll(filteredItems);
+//
+//    }
+
     /**
-     * 특정 메뉴 제거 - 스트림 활용
+     * 특정 메뉴 이름으로 찾기 - 스트림활용
      */
-    public void removeOrderItemByName(String menuName) {
-        // 스트림을 사용하여 해당 메뉴를 제외한 리스트 생성
-        List<OrderItem> filteredItems = orderItems.stream()
-                .filter(orderItem -> !orderItem.menuItem().getName().equalsIgnoreCase(menuName))
-                        .collect(Collectors.toList());
+    public OrderItem findOrderItemByName(String menuName) {
+        return orderItems.stream()
+                .filter(orderItem -> orderItem.menuItem().getName().toLowerCase().equalsIgnoreCase(menuName.toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
 
-        // 원본 리스트를 교체
-        orderItems.clear();
-        orderItems.addAll(filteredItems);
+    /**
+     * 특정 메뉴 수량만큼 제거 - 스트림 활용
+     * @param menuName 제거할 메뉴 이름
+     * @param quantity 제거할 수량
+     * @return 제거 성공 여부
+     */
+    public void removeOrderItemByQuantity(String menuName, int quantity) {
+        OrderItem targetItem = findOrderItemByName(menuName);
 
+        // 전체 제거하는 경우
+        if (quantity == targetItem.quantity()) {
+            orderItems.remove(targetItem);
+        }
+
+        // 일부만 제거하는 경우 - 수량 감소
+        targetItem.decreaseQuantity(quantity);
     }
 
     /**

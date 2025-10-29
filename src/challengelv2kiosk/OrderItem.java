@@ -6,7 +6,7 @@ package challengelv2kiosk;
 public class OrderItem {
     // 속성 _ 가변 객체
     private final MenuItem menuItem;
-    private final int quantity;
+    private int quantity; // 수량 조절을 위함.
 
     // 생성자
     public OrderItem(MenuItem menuItem, int quantity) {
@@ -25,6 +25,22 @@ public class OrderItem {
 
     public int quantity() {
         return this.quantity;
+    }
+
+    /**
+     * 수량 감소 메소드
+     * @param quantity 감소 시킬 수량
+     * @return 수량이 0이 되면 true, 아니면 false
+     */
+    public void decreaseQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("감소 수량은 1 이상이어야 합니다.");
+        }
+        if(quantity > this.quantity) {
+            throw new IllegalArgumentException("감소 수량이 현재 수량보다 많습니다.");
+        }
+
+        this.quantity -= quantity;
     }
 
     /**

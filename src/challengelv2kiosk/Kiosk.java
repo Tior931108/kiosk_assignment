@@ -235,10 +235,47 @@ public class Kiosk {
                 boolean filtered = order.printCartFilterByName(menuName);
 
                 if(filtered) {
-                    // 입력한 메뉴 이름이 동일하다면 제거
-                    order.removeOrderItemByName(menuName);
-                    System.out.println("\n '" + menuName + "'(이)가 장바구니에서 제거되었습니다.");
+                    // 메뉴 이름에 해당하는 장바구니 메뉴
+                    OrderItem targetItem = order.findOrderItemByName(menuName);
+
+                    // 현재 수량 표시
+                    System.out.println("\n현재 '" + menuName + "' 수량: " + targetItem.quantity() + "개");
+                    System.out.print("제외할 수량을 입력해주세요 (전체 제외는 " + targetItem.quantity() + " 입력): ");
+
+                    int removeQuantity = sc.nextInt();
+
+                    // 수량 유효성 검사
+                    if (removeQuantity <= 0) {
+                        System.out.println("\n수량은 1 이상이어야 합니다.");
+                        continue;
+                    }
+
+                    if (removeQuantity > targetItem.quantity()) {
+                        System.out.println("\n입력한 수량(" + removeQuantity + "개)이 장바구니의 수량("
+                                + targetItem.quantity() + "개)보다 많습니다.");
+                        continue;
+                    }
+
+                    // 제거 전 원래 수량 저장
+                    int originalQuantity = targetItem.quantity();
+
+                    // 수량만큼 제거
+                    order.removeOrderItemByQuantity(menuName, removeQuantity);
+
+                    if (removeQuantity == originalQuantity) {
+                        // 전체 제거된 경우
+                        System.out.println("\n'" + menuName + "' " + removeQuantity
+                                + "개가 장바구니에서 완전히 제거되었습니다.");
+                    } else {
+                        // 일부만 제거된 경우 (남은 수량 = 원래 수량 - 제거 수량)
+                        int remainingQuantity = originalQuantity - removeQuantity;
+                        System.out.println("\n'" + menuName + "' " + removeQuantity
+                                + "개가 제거되었습니다. (남은 수량: "
+                                + remainingQuantity + "개)");
+                    }
+
                     break;
+
                 } else {
                     System.out.println("\n '" + menuName + "'(을)를 장바구니에서 찾을 수 없습니다.");
                     break;
