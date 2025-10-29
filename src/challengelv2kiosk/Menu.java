@@ -41,7 +41,7 @@ public class Menu {
      * 행위 중심 : 메뉴 개수 조회
      */
     public int size() {
-        return menuItems.size();
+        return menuItems().size();
     }
 
     /**

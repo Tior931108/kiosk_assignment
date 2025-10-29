@@ -4,7 +4,7 @@ package challengelv2kiosk;
  * OrderItem : 장바구니에 담긴 개별 항목 (메뉴 + 수량)
  */
 public class OrderItem {
-    // 속성
+    // 속성 _ 가변 객체
     private final MenuItem menuItem;
     private final int quantity;
 
@@ -31,7 +31,7 @@ public class OrderItem {
      * 해당 항목의 총 계산
      */
     public double calculatePrice() {
-        return menuItem.getPrice() * quantity;
+        return menuItem().getPrice() * quantity();
     }
 
     /**
@@ -39,7 +39,7 @@ public class OrderItem {
      */
     public void printCartItem() {
         System.out.printf("%-16s | W %.1f | %d개 | 금액 : W %.1f\n",
-                menuItem.getName(), menuItem.getPrice(), quantity, calculatePrice());
+                menuItem.getName(), menuItem.getPrice(), quantity(), calculatePrice());
     }
 
 }
